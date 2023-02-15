@@ -1,11 +1,13 @@
-import React from 'react'
-
+import React, { useState } from "react"; 
 import Navbar from "../Components/Navbar"
 import Announcements from "../Components/Announcements"
 import Footer from "../Components/Footer"
 import styled from 'styled-components'
 import { Add, Remove } from '@mui/icons-material'
 import { mobile } from "../responsive";
+import { loadStripe } from "@stripe/stripe-js"; 
+
+
 
 
 const Wraper=styled.div`
@@ -169,6 +171,52 @@ color: white;
 
 
 const Cart = () => {
+
+
+    const [product, setProduct]=useState({
+        name:'Shoes',
+        price:2000,
+        productOwner:"ShopKro",
+        description: "This beginner-friendly Full-Stack Web Development Course is offered online in blended learning mode, and also in an on-demand self-paced format.",
+        quantity :2,
+      });
+
+
+      
+  const publishableKey='pk_test_51MZRE8Jd9hG7xuujuafBxiH30Ftj9gxagzeiDwtgGfouXo1gHRVvuShdi6tTNN50Sa3JjwOafd0mC3MQmnvuVyUY00CGWtM9P0'
+  
+  // make payment fucntion
+
+  const makepayment= async()=>{
+
+    const stripe=await loadStripe(publishableKey);
+    const url = "http://localhost:4000/api/payment/create-checkout-session";
+    const body={product};
+    const headers={
+        "Content-Type": "application/json",
+        "token" :"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZGNlNGQzZGFmNDY0ODIxYWI5YzdhOSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY3NjM0OTU0MSwiZXhwIjoxNjc2MzU2NzQxfQ.da-B8PZ9L7U-BBviQaH8STBc4aPTX6OexBI944i_xWU",
+    }
+
+
+    console.log("Body will be : " ,body);
+
+    const response=await fetch(url,{
+        method:'POST',
+        headers:headers,
+        body:JSON.stringify(body) 
+    })
+
+    const session=await response.json();
+
+    const result=stripe.redirectToCheckout({
+        sessionId:session.id
+    })
+
+    if(result.error){
+        console.log(result.error)
+    }
+  }   // make payment fucntion end
+
   return (
     <div>
         <Navbar/>
@@ -260,7 +308,7 @@ const Cart = () => {
                         <SummaryItemText>Total</SummaryItemText>
                         <SummaryItemPrice>$ 80</SummaryItemPrice>
                     </SummaryItem>
-                    <SummaryButton>CHECKOUT NOW</SummaryButton>
+                    <SummaryButton onClick={() => makepayment()}>CHECKOUT NOW</SummaryButton>
                 </Summary>
             </Bottom>
         </Wraper>
