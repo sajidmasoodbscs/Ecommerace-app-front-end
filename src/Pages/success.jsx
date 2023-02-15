@@ -9,7 +9,6 @@ const success = () => {
         height:"100vh",
         display:"flex",
         justifyContent:"center"
-
       };
 
     const card={

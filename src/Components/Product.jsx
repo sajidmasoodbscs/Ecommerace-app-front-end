@@ -68,7 +68,7 @@ transition: all 0.5s ease;
 
 const Product = ({item}) => {
 
-    console.log("Item is here ",item)
+    console.log("Item is here ",item);
   return (
     <Container>
         <Image src={item.img}></Image>

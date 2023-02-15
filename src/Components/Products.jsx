@@ -17,7 +17,10 @@ const Products = () => {
   const getApiData = async () => {
     const url = "http://localhost:4000/api/products/";
     const response = await fetch(
-      url,{headers :{token :"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZGNlNGQzZGFmNDY0ODIxYWI5YzdhOSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY3NjM0OTU0MSwiZXhwIjoxNjc2MzU2NzQxfQ.da-B8PZ9L7U-BBviQaH8STBc4aPTX6OexBI944i_xWU"}}
+      url,{headers :{
+        token :"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZGNlNGQzZGFmNDY0ODIxYWI5YzdhOSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY3NjM0OTU0MSwiZXhwIjoxNjc2MzU2NzQxfQ.da-B8PZ9L7U-BBviQaH8STBc4aPTX6OexBI944i_xWU"
+      }
+    }
     ).then(async(response) => await response.json());
   
     // update the state
