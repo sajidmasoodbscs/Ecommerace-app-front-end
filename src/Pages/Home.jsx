@@ -16,7 +16,7 @@ function Home() {
         <Navbar/>
         <Slider/>
         <Categories />
-        <Products/>
+        <Products cat={null}/>
         <Newsletter/>
         <Footer/>
     </div>

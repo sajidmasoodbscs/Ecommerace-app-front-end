@@ -1,3 +1,4 @@
+import { Link } from '@mui/material'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -42,11 +43,13 @@ const Button=styled.button`
 const CategoriesItem = ({item}) => {
   return (
     <Container>
+        <Link>
         <Image src={item.img}/>
         <InfoContainer>
             <Title>{item.title}</Title>
             <Button>SHOP NOW</Button>
         </InfoContainer>
+        </Link>
     </Container>
   )
 }

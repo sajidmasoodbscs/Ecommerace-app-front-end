@@ -21,6 +21,7 @@ transition: all 0.5s ease;
 const Container=styled.div`
 flex:1;
 min-width: 300px;
+max-width: 300px;
 height: 350px;
 margin: 5px;
 display: flex;
@@ -44,7 +45,7 @@ position: absolute;
 `
 
 const Image=styled.img`
-width:75%;
+width:70%;
 z-index: 2;
 `
 
@@ -68,7 +69,9 @@ transition: all 0.5s ease;
 
 const Product = ({item}) => {
 
-    console.log("Item is here ",item);
+    // console.log("Item is here ",item);
+
+    // console.log("Product component is called")
   return (
     <Container>
         <Image src={item.img}></Image>

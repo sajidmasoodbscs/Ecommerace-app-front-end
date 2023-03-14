@@ -3,44 +3,110 @@ import React, { useEffect, useState } from "react";
 
 // import { popularProducts } from "../data";
 import Product from "./Product";
+import axios from "axios"
 
 const Container = styled.div`
   display: flex;
   padding: 20px;
-  justify-content: space-between;
+  justify-content: center;
   flex-wrap: wrap;
 `;
 
-const Products = () => {
-  const [productsdata, setProductsdata] = useState(null);
+const Products = ({cat ='',filters='',sort}) => {
 
-  const getApiData = async () => {
-    const url = "http://localhost:4000/api/products/";
-    const response = await fetch(
-      url,{headers :{
-        token :"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZGNlNGQzZGFmNDY0ODIxYWI5YzdhOSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY3NjM0OTU0MSwiZXhwIjoxNjc2MzU2NzQxfQ.da-B8PZ9L7U-BBviQaH8STBc4aPTX6OexBI944i_xWU"
+    const [products, setProducts] = useState([]);
+    const [filteredproducs, setFilteredProducts] = useState([]);
+
+    console.log("categoray in props is :",cat);
+    console.log("Filters in props is :",filters);
+    console.log("Sort in props is :",sort);
+
+
+    useEffect(()=>{
+
+     const getData=async()=>{
+        try{
+          const productsResp = await axios.get(cat ? `http://localhost:4000/api/products/?category=${cat}`:`http://localhost:4000/api/products`);
+          setProducts(productsResp.data);
+          // console.log("Products data :",products);
+        }catch(error){
+          if(error.response){
+                // when request made and server responed
+                console.log("Error Respose",error.response)
+              }else if (error.request){
+                // when request made but server not responsed
+                console.log("Error Request",error.request)
+              } else {
+                // when seomthing starnge request not made to server
+                console.log("Error Request",error.message)
+              }      
+        }
+     } 
+     getData();
+    },[cat]);
+
+    useEffect(()=>{
+
+      setFilteredProducts(
+        cat &&  products.filter((item)=> Object.entries(filters).every(([key,value])=>(
+                  item[key].includes(value)
+        )
+       ))
+      )
+    },[products,cat,filters]);
+
+    useEffect(()=>{
+
+      setFilteredProducts(
+        products.filter((item)=> Object.entries(filters).every(([key,value])=>(
+                  item[key].includes(value)
+        )
+       ))
+      )
+    },[products,filters]);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+    console.log("Products ,",products);
+    console.log("Filltered Products ,",filteredproducs);
+
+    
+
+
+    useEffect(() => {
+      // Sort by latest date:
+      if(sort){
+      if (sort === "newest") {
+        setFilteredProducts(prev =>
+          [...prev].sort((a, b) => a.createdAt.localeCompare(b.createdAt)
+        ))
+      } else if (sort === "asc") {
+        setFilteredProducts(prev =>
+          [...prev].sort((a, b) => a.price - b.price)
+        )
+      } else if (sort === "desc") {
+        setFilteredProducts(prev =>
+          [...prev].sort((a, b) => b.price - a.price)
+        )
+      } else {
+        // Sort by oldest date:
+        setFilteredProducts(prev =>
+          [...prev].sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+        )
       }
     }
-    ).then(async(response) => await response.json());
-  
-    // update the state
-    setProductsdata(response);
-  };
-
-  useEffect(() => {
-    getApiData();
-  }, []);
+    }, [sort]);
 
 
   return (
+
     <Container>
-      {productsdata &&
-        productsdata.map((item) => (
-          // console.log("Item is here,",item)
-          <Product item={item} key={item._id} />
-        ))}
+      {cat
+        ? filteredproducs.map((item) => <Product item={item} key={item.id} />)
+        : products
+            .slice(0, 8)
+            .map((item) => <Product item={item} key={item.id} />)}
     </Container>
   );
 };
+
 
 export default Products;

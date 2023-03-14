@@ -5,8 +5,8 @@ import Products from "../Components/Products";
 import Newsletter from "../Components/Newsletter";
 import Footer from "../Components/Footer";
 import { mobile } from "../responsive";
-
-import Select from "react-select";
+import { useLocation } from "react-router-dom";
+import { useState } from "react";
 
 
 const Container = styled.div``;
@@ -23,7 +23,8 @@ const FilterContainer = styled.div`
 const Filter = styled.div`
 display: flex;
   margin: 20px;
-  ${mobile({ width: "0px 30px", display: "flex", flexDirection: "column" })}
+  align-items:center;
+  ${mobile({ display: "flex", flexDirection: "column" })}
 `;
 
 const FilterText = styled.span`
@@ -33,39 +34,17 @@ const FilterText = styled.span`
   ${mobile({ marginRight: "0px" })}
 `;
 
-// const Select = styled.select`
-//   padding: 10px;
-//   margin-right: 20px;
-//   ${mobile({ margin: "10px 0px" })}
-// `;
+
+const Option=styled.option``
+
+const Select = styled.select`
+  padding: 10px;
+  margin-right: 20px;
+  ${mobile({ margin: "10px 0px",width:"100%" })}
+`;
 
 const ProductList = () => {
 
-  const colorOptions = [
-    { value: "blues", label: "Color" },
-    { value: "rock", label: "White" },
-    { value: "jazz", label: "Black" },
-    { value: "orchestra", label: "Red" },
-    { value: "orchestra", label: "Blue" },
-    { value: "orchestra", label: "Yellow" },
-    { value: "orchestra", label: "Green" },
-
-  ];
-  
-  const sizeOptions = [
-    { value: "XS", label: "XS" },
-    { value: "S", label: "S" },
-    { value: "M", label: "M" },
-    { value: "L", label: "L" },
-    { value: "XL", label: "XL" },
-    { value: "XXL", label: "XXL" },
-
-  ];
-
-  const sortBy = [
-    { value: "Price(ASC)", label: "Price(ASC)" },
-    { value: "Price(DESC)", label: "Price(DESC)" }
-  ];
 const customstyle={
   container: provided => ({
     ...provided,
@@ -90,6 +69,26 @@ const customstyle={
   })
 };
 
+
+
+const location= useLocation();
+const cat=location.pathname.split("/")[2];
+console.log("categoray is :",cat);
+
+// filteers
+
+const [filters,setFilters]=useState([]);
+const [sort,setSort]=useState(null);
+
+
+const handleChange=async(e)=>{
+
+      const value=e.target.value;
+ await setFilters({ ...filters,[e.target.name]:value})  
+}
+
+console.log("Filters :",filters,sort);
+
   return (
     <Container>
       <Navbar />
@@ -98,17 +97,33 @@ const customstyle={
       <FilterContainer>
         <Filter>
           <FilterText>Filter Products:</FilterText>
-          <Select options={colorOptions} styles={customstyle} />
-          <Select options={sizeOptions} styles={customstyle} />
+          <Select  name="color" onChange={handleChange} style={customstyle}>
+            <Option disabled>color</Option>
+            <Option>black</Option>
+            <Option>red</Option>
+            <Option>green</Option>
+            <Option>blue</Option>
+          </Select>
+          <Select  name="size" onChange={handleChange} style={customstyle}>
+          <Option disabled>Size</Option>
+            <Option>S</Option>
+            <Option>M</Option>
+            <Option>L</Option>
+            <Option>XL</Option>
+          </Select>
         </Filter>
         <Filter>
           <FilterText>Sort Products:</FilterText>
-          <Select options={sortBy} styles={customstyle} />
+          <Select name="sort" onChange={(e)=>setSort(e.target.value)} style={customstyle}>
+            <Option value="newest">Newest</Option>
+            <Option value="asc">Price(ASC)</Option>
+            <Option value="desc">Price(DESC)</Option>
+          </Select>
         </Filter>
       </FilterContainer>
-      <Products />
-      <Newsletter />
-      <Footer />
+      <Products cat={cat} filters={filters}  sort={sort}/>
+      {/* <Newsletter /> */}
+      {/* <Footer /> */}
     </Container>
   );
 };

@@ -173,15 +173,15 @@ color: white;
 const Cart = () => {
 
 
-    const [product, setProduct]=useState({
+    const [product, setProduct]=useState();
+
+    setProduct({
         name:'Shoes',
         price:2000,
         productOwner:"ShopKro",
         description: "This beginner-friendly Full-Stack Web Development Course is offered online in blended learning mode, and also in an on-demand self-paced format.",
         quantity :2,
       });
-
-
       
   const publishableKey='pk_test_51MZRE8Jd9hG7xuujuafBxiH30Ftj9gxagzeiDwtgGfouXo1gHRVvuShdi6tTNN50Sa3JjwOafd0mC3MQmnvuVyUY00CGWtM9P0'
   
